@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCRMS - Civic Complaint Portal</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #243247; }
+    header { background: #173b68; color: white; padding: 24px 7%; }
+    header h1 { margin: 0 0 8px; font-size: 25px; }
+    header p { margin: 0; color: #dce8f7; }
+    nav { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 20px; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    main { width: min(1100px, 92%); margin: 28px auto; }
+    .welcome, .panel { background: white; padding: 25px; border-radius: 12px; margin: 20px 0; box-shadow: 0 3px 12px #172b4d12; }
+    h2 { color: #173b68; margin-top: 0; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 18px 0 28px; }
+    .stat { background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #2c78b9; }
+    .stat strong { display: block; font-size: 25px; margin-top: 8px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    label { display: block; font-weight: bold; margin-bottom: 7px; }
+    input, select, textarea { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }
+    textarea { resize: vertical; }
+    .full { grid-column: 1 / -1; }
+    button { background: #1769aa; color: white; border: 0; border-radius: 6px; padding: 12px 20px; font-weight: bold; cursor: pointer; }
+    button:hover { background: #104d80; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background: #edf3fa; }
+    .track-row { display: flex; gap: 10px; max-width: 550px; }
+    .message { margin-top: 12px; font-weight: bold; }
+    .status { display: inline-block; padding: 5px 9px; border-radius: 20px; background: #e7effa; color: #174a78; font-size: 13px; }
+    footer { text-align: center; padding: 22px; color: #64748b; }
+    @media (max-width: 650px) {
+      .stats, .form-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .track-row { flex-direction: column; }
+      header h1 { font-size: 21px; }
+      .panel { padding: 18px; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Online Complaint Registration and Management System</h1>
+    <p>Your voice helps make our community better.</p>
+    <nav>
+      <a href="#home">Home</a><a href="#register">Register Complaint</a>
+      <a href="#track">Track Complaint</a><a href="#complaints">My Complaints</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="welcome" id="home">
+      <h2>Welcome to OCRMS</h2>
+      <p>Report street light failures, water pipe leakage, rain water drainage blockage, road damage and other civic issues. Submit a complaint and use its unique ID to track progress.</p>
+    </section>
+
+    <section class="stats">
+      <div class="stat">Total Complaints<strong id="totalCount">0</strong></div>
+      <div class="stat">Pending Complaints<strong id="pendingCount">0</strong></div>
+      <div class="stat">Resolved Complaints<strong id="resolvedCount">0</strong></div>
+    </section>
+
+    <section class="panel" id="register">
+      <h2>Register a Complaint</h2>
+      <form id="complaintForm">
+        <div class="form-grid">
+          <div><label for="name">Full Name</label><input id="name" type="text" required></div>
+          <div><label for="email">Email Address</label><input id="email" type="email" required></div>
+          <div><label for="phone">Phone Number</label><input id="phone" type="tel" required></div>
+          <div><label for="category">Complaint Category</label>
+            <select id="category" required><option value="">Choose category</option><option>Street Light</option><option>Water Pipe Leakage</option><option>Rain Water Drainage</option><option>Road Problem</option><option>Other</option></select>
+          </div>
+          <div><label for="location">Complaint Location</label><input id="location" type="text" placeholder="Area / street / landmark" required></div>
+          <div><label for="priority">Priority</label><select id="priority"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+          <div class="full"><label for="description">Description</label><textarea id="description" rows="4" placeholder="Explain the problem..." required></textarea></div>
+          <div class="full"><button type="submit">Submit Complaint</button><p id="formMessage" class="message" aria-live="polite"></p></div>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" id="track">
+      <h2>Track Your Complaint</h2>
+      <p>Enter the Complaint ID received after registration.</p>
+      <div class="track-row"><input id="trackId" type="text" placeholder="Example: CMP-1001"><button id="trackButton" type="button">Track Status</button></div>
+      <p id="trackResult" class="message" aria-live="polite"></p>
+    </section>
+
+    <section class="panel" id="complaints">
+      <h2>My Complaints</h2>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Complaint ID</th><th>Category</th><th>Location</th><th>Priority</th><th>Status</th></tr></thead>
+          <tbody id="complaintRows"><tr><td colspan="5">No complaints registered yet.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer>Online Complaint Registration and Management System | Full Stack Development Mini Project</footer>
+
+  <script>
+    // Demonstration data is stored in this browser using localStorage.
+    let complaints = JSON.parse(localStorage.getItem("ocrmsComplaints") || "[]");
+    let nextNumber = Number(localStorage.getItem("ocrmsNextNumber") || "1001");
+
+    const form = document.getElementById("complaintForm");
+    const formMessage = document.getElementById("formMessage");
+
+    function saveComplaints() {
+      localStorage.setItem("ocrmsComplaints", JSON.stringify(complaints));
+      localStorage.setItem("ocrmsNextNumber", String(nextNumber));
+    }
+
+    function updateDashboard() {
+      const resolved = complaints.filter(c => c.status === "Resolved").length;
+      document.getElementById("totalCount").textContent = complaints.length;
+      document.getElementById("resolvedCount").textContent = resolved;
+      document.getElementById("pendingCount").textContent = complaints.length - resolved;
+    }
+
+    function displayComplaints() {
+      const rows = document.getElementById("complaintRows");
+      rows.replaceChildren();
+      if (complaints.length === 0) {
+        const row = rows.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 5;
+        cell.textContent = "No complaints registered yet.";
+      } else {
+        complaints.forEach(c => {
+          const row = rows.insertRow();
+          [c.id, c.category, c.location, c.priority].forEach(value => {
+            const cell = row.insertCell();
+            cell.textContent = value;
+          });
+          const statusCell = row.insertCell();
+          const badge = document.createElement("span");
+          badge.className = "status";
+          badge.textContent = c.status;
+          statusCell.appendChild(badge);
+        });
+      }
+      updateDashboard();
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const complaint = {
+        id: "CMP-" + nextNumber++,
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        category: document.getElementById("category").value,
+        location: document.getElementById("location").value.trim(),
+        priority: document.getElementById("priority").value,
+        description: document.getElementById("description").value.trim(),
+        status: "Registered",
+        createdAt: new Date().toLocaleString()
+      };
+
+      complaints.push(complaint);
+      saveComplaints();
+      displayComplaints();
+      formMessage.textContent = "Complaint submitted successfully! Your Complaint ID is " + complaint.id;
+      form.reset();
+    });
+
+    document.getElementById("trackButton").addEventListener("click", function() {
+      const id = document.getElementById("trackId").value.trim().toUpperCase();
+      const complaint = complaints.find(c => c.id === id);
+      const result = document.getElementById("trackResult");
+      if (!id) {
+        result.textContent = "Please enter a Complaint ID.";
+      } else if (complaint) {
+        result.textContent = complaint.id + " — " + complaint.category + " at " + complaint.location + ". Current status: " + complaint.status + ". Submitted: " + complaint.createdAt;
+      } else {
+        result.textContent = "No complaint found. Please check the ID and try again.";
+      }
+    });
+
+    displayComplaints();
+  </script>
+</body>
+</html>

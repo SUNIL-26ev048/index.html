@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCRMS - Civic Complaint Portal</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #243247; }
+    header { background: #173b68; color: white; padding: 24px 7%; }
+    header h1 { margin: 0 0 8px; font-size: 25px; }
+    header p { margin: 0; color: #dce8f7; }
+    nav { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 20px; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    main { width: min(1100px, 92%); margin: 28px auto; }
+    .welcome { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 3px 12px #172b4d12; }
+    h2 { color: #173b68; margin-top: 0; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 18px 0 28px; }
+    .stat { background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #2c78b9; }
+    .stat strong { display: block; font-size: 25px; margin-top: 8px; }
+    .panel { background: white; padding: 25px; border-radius: 12px; margin: 20px 0; box-shadow: 0 3px 12px #172b4d12; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    label { display: block; font-weight: bold; margin-bottom: 7px; }
+    input, select, textarea { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }
+    textarea { resize: vertical; }
+    .full { grid-column: 1 / -1; }
+    button { background: #1769aa; color: white; border: 0; border-radius: 6px; padding: 12px 20px; font-weight: bold; cursor: pointer; }
+    button:hover { background: #104d80; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background: #edf3fa; }
+    .track-row { display: flex; gap: 10px; max-width: 550px; }
+    footer { text-align: center; padding: 22px; color: #64748b; }
+    @media (max-width: 650px) {
+      .stats, .form-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .track-row { flex-direction: column; }
+      header h1 { font-size: 21px; }
+      .panel { padding: 18px; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Online Complaint Registration and Management System</h1>
+    <p>Your voice helps make our community better.</p>
+    <nav>
+      <a href="#home">Home</a><a href="#register">Register Complaint</a>
+      <a href="#track">Track Complaint</a><a href="#complaints">My Complaints</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="welcome" id="home">
+      <h2>Welcome to OCRMS</h2>
+      <p>Register civic issues such as street light failure, water pipe leakage, rain water drainage blockage and road problems. Submit a complaint and keep its ID to track progress.</p>
+    </section>
+
+    <section class="stats" aria-label="Complaint summary">
+      <div class="stat">Total Complaints<strong>12</strong></div>
+      <div class="stat">Pending Complaints<strong>8</strong></div>
+      <div class="stat">Resolved Complaints<strong>4</strong></div>
+    </section>
+
+    <section class="panel" id="register">
+      <h2>Register a Complaint</h2>
+      <form>
+        <div class="form-grid">
+          <div><label for="name">Full Name</label><input id="name" type="text" placeholder="Enter your name" required></div>
+          <div><label for="email">Email Address</label><input id="email" type="email" placeholder="name@example.com" required></div>
+          <div><label for="phone">Phone Number</label><input id="phone" type="tel" placeholder="Enter phone number" required></div>
+          <div><label for="category">Complaint Category</label>
+            <select id="category" required><option value="">Choose category</option><option>Street Light</option><option>Water Pipe Leakage</option><option>Rain Water Drainage</option><option>Road Problem</option><option>Other</option></select>
+          </div>
+          <div><label for="location">Complaint Location</label><input id="location" type="text" placeholder="Area / street / landmark" required></div>
+          <div><label for="priority">Priority</label><select id="priority"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+          <div class="full"><label for="description">Description</label><textarea id="description" rows="4" placeholder="Explain the problem..." required></textarea></div>
+          <div class="full"><button type="submit">Submit Complaint</button></div>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" id="track">
+      <h2>Track Your Complaint</h2>
+      <p>Enter the Complaint ID received after registration.</p>
+      <div class="track-row"><input type="text" placeholder="Example: CMP-1001"><button type="button">Track Status</button></div>
+    </section>
+
+    <section class="panel" id="complaints">
+      <h2>Recent Complaints</h2>
+      <table>
+        <thead><tr><th>Complaint ID</th><th>Category</th><th>Location</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>CMP-1001</td><td>Street Light</td><td>Main Road</td><td>Under Review</td></tr>
+          <tr><td>CMP-1002</td><td>Road Problem</td><td>Market Street</td><td>In Progress</td></tr>
+          <tr><td>CMP-1003</td><td>Water Pipe Leakage</td><td>North Avenue</td><td>Resolved</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer>Online Complaint Registration and Management System | Full Stack Development Mini Project</footer>
+</body>
+</html>

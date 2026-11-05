@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Complaint Registration and Management System</title>
+</head>
+<body>
+  <header>
+    <h1>Online Complaint Registration and Management System</h1>
+    <p>Report civic problems and track their progress online.</p>
+    <nav>
+      <a href="#home">Home</a> |
+      <a href="#register">Register Complaint</a> |
+      <a href="#track">Track Complaint</a> |
+      <a href="#complaints">My Complaints</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home">
+      <h2>Welcome to OCRMS</h2>
+      <p>Use this portal to report street light failures, water pipe leakage, drainage blockage, road damage and other civic issues.</p>
+      <h3>Complaint Summary</h3>
+      <p>Total Complaints: 0</p>
+      <p>Pending Complaints: 0</p>
+      <p>Resolved Complaints: 0</p>
+    </section>
+
+    <hr>
+
+    <section id="register">
+      <h2>Register a Complaint</h2>
+      <form>
+        <p><label for="name">Your Name:</label><br><input id="name" type="text" required></p>
+        <p><label for="email">Email:</label><br><input id="email" type="email" required></p>
+        <p><label for="phone">Phone Number:</label><br><input id="phone" type="tel" required></p>
+        <p><label for="category">Complaint Category:</label><br>
+          <select id="category" required>
+            <option value="">Select category</option>
+            <option>Street Light</option>
+            <option>Water Pipe Leakage</option>
+            <option>Rain Water Drainage</option>
+            <option>Road Problem</option>
+            <option>Other</option>
+          </select>
+        </p>
+        <p><label for="location">Complaint Location:</label><br><input id="location" type="text" required></p>
+        <p><label for="priority">Priority:</label><br>
+          <select id="priority"><option>Low</option><option selected>Medium</option><option>High</option></select>
+        </p>
+        <p><label for="description">Complaint Description:</label><br><textarea id="description" rows="4" required></textarea></p>
+        <button type="submit">Submit Complaint</button>
+      </form>
+    </section>
+
+    <hr>
+
+    <section id="track">
+      <h2>Track Your Complaint</h2>
+      <label for="complaintId">Enter Complaint ID:</label>
+      <input id="complaintId" type="text" placeholder="Example: CMP-1001">
+      <button type="button">Track</button>
+      <p>Complaint status will be displayed here.</p>
+    </section>
+
+    <hr>
+
+    <section id="complaints">
+      <h2>My Complaints</h2>
+      <table border="1" cellpadding="8">
+        <tr><th>Complaint ID</th><th>Category</th><th>Location</th><th>Status</th></tr>
+        <tr><td>CMP-1001</td><td>Street Light</td><td>Main Road</td><td>Under Review</td></tr>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Online Complaint Registration and Management System | Mini Project</p>
+  </footer>
+</body>
+</html>
